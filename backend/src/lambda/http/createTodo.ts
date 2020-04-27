@@ -5,6 +5,7 @@ import { CreateTodo } from '../../businessLogic/todos'
 import * as middy from 'middy';
 import { cors } from 'middy/middlewares';
 import { createLogger } from '../../utils/logger';
+import { getUserId } from '../utils'
 
 const logger = createLogger ('Create Todo Item')
 
@@ -14,17 +15,14 @@ export const handler = middy(
             logger.info('Processing event: ', event)
 
             const newTodo: CreateTodoRequest = JSON.parse(event.body)
-            const authorization = event.headers.Authorization
-            const split = authorization.split(' ')
-            const jwtToken = split[1]
+            const userId = getUserId(event)
 
             // TODO: Implement creating a new TODO item
-            const newItem = await CreateTodo(newTodo, jwtToken)
+            const newItem = await CreateTodo(newTodo, userId)
             return {
                 statusCode: 201,
-                headers: { //Check after uncommenting
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Credentials': true
+                headers: {
+                    'Access-Control-Allow-Origin': '*'
                 },
                 body: JSON.stringify({
                     newItem
