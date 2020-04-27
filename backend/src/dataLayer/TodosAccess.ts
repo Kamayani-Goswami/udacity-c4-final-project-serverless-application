@@ -1,6 +1,5 @@
 import * as AWS  from 'aws-sdk'
-const AWSXRay = require('aws-xray-sdk');
-//import * as AWSXRay from 'aws-xray-sdk'
+const AWSXRay = require('aws-xray-sdk')
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 import { createLogger } from '../utils/logger'
 import { TodoItem } from '../models/TodoItem'
@@ -15,8 +14,7 @@ export class TodoAccess {
         private readonly todosTable = process.env.TODOS_TABLE,
         private readonly s3 = new XAWS.S3({ signatureVersion: 'v4' }),
         private readonly bucketName = process.env.IMAGES_S3_BUCKET,
-        private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION,
-        //private readonly userIdIndex = process.env.USER_ID_INDEX
+        private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION
         ) {
     }
 
@@ -27,7 +25,6 @@ export class TodoAccess {
       const result = await this.docClient
       .query({
         TableName: this.todosTable,
-        //IndexName: this.userIdIndex,
         KeyConditionExpression: 'userId = :userId',
         ExpressionAttributeValues: {
           ':userId': userId
@@ -58,7 +55,6 @@ export class TodoAccess {
     async UpdateTodo (todoItem: TodoItem): Promise<string> {
       
       logger.info(`Updating a todo with ID ${todoItem.todoId}`)
-      logger.info("payload: " + JSON.stringify(todoItem))
 
       await this.docClient.update({
         TableName: this.todosTable,
