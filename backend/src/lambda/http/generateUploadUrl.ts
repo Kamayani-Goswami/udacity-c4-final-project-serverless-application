@@ -15,16 +15,15 @@ export const handler =  middy(
             logger.info('Processing event: ', event)
             const todoId = event.pathParameters.todoId
             // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
-            const signedUploadUrl = GenerateUploadUrl(todoId)
+            const signedUploadUrl = await GenerateUploadUrl(todoId)
 
             return {
                 statusCode: 200,
                 headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Credentials': true
+                    'Access-Control-Allow-Origin': '*'
                 },
                 body: JSON.stringify({
-                    signedUploadUrl
+                    uploadUrl: signedUploadUrl
                 })
             }
         } catch (e){
@@ -32,9 +31,9 @@ export const handler =  middy(
   
             return {
             statusCode: 500,
-            // headers: { Check after uncommenting
-            //     'Access-Control-Allow-Origin': '*'
-            // },  
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            },  
             body: e.message
             }
         }
